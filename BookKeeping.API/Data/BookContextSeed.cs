@@ -1,5 +1,6 @@
 ﻿
 using BookKeeping.API.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookKeeping.API.Data
 {
@@ -9,13 +10,19 @@ namespace BookKeeping.API.Data
         {
             if (!bookContext.Books.Any())
             {
-                bookContext.Books.AddRange(GetPreconfiguredOrders());
+                bookContext.Books.AddRange(GetPreconfiguredBooks());
                 await bookContext.SaveChangesAsync();
-                logger.LogInformation("Seed database associated with context {DbContextName}", typeof(BookContext).Name);
+                logger.LogInformation("Seed database associated with context {DbContextName} for Book table", typeof(BookContext).Name);
+            }
+            if (!bookContext.Citations.Any())
+            {
+                bookContext.Citations.AddRange(GetPreconfiguredCitations(bookContext.Books.ToList()));
+                await bookContext.SaveChangesAsync();
+                logger.LogInformation("Seed database associated with context {DbContextName} for Citation table", typeof(BookContext).Name);
             }
         }
 
-        private static IEnumerable<Book> GetPreconfiguredOrders()
+        private static IEnumerable<Book> GetPreconfiguredBooks()
         {
             return new List<Book>
             {
@@ -50,6 +57,39 @@ namespace BookKeeping.API.Data
                     Title = "The All rounder book",
                     Publisher = "Bloom India",
                     Price = 10
+                }
+            };
+        }
+        private static IEnumerable<Citation> GetPreconfiguredCitations(List<Book> books)
+        {
+            return new List<Citation>
+            {
+                new Citation()
+                {
+                    Book = books[0],
+                    SourceTitle = "Sample Chapter title",
+                    VolumeNo = 3,
+                    StartPageNo = 125,
+                    EndPageNo = 127,
+                    URL = "github.com/bookTitle"
+                },
+                new Citation()
+                {
+                    Book = books[1],
+                    SourceTitle = "Sample Chapter title 4",
+                    VolumeNo = 2,
+                    StartPageNo = 155,
+                    EndPageNo = 162,
+                    URL = "github.com/bookTitle4"
+                },
+                new Citation()
+                {
+                    Book = books[3],
+                    SourceTitle = "Sample Chapter title 2",
+                    VolumeNo = 1,
+                    StartPageNo = 12,
+                    EndPageNo = 18,
+                    URL = "github.com/bookTitle2"
                 }
             };
         }

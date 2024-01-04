@@ -10,5 +10,6 @@ namespace BookKeeping.API.Data
         }
 
         public DbSet<Book> Books { get; set; }
+        public DbSet<Citation> Citations { get; set; }
     }
 }

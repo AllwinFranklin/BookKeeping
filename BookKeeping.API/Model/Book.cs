@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Publisher { get; set; }
+        public DateTime PublishedDate { get; set; }
         public string Title { get; set; }
         public string AuthorLastName { get; set; }
         public string AuthorFirstName { get; set; }
