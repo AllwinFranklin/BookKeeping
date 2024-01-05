@@ -1,6 +1,7 @@
 using BookKeeping.API.Contracts;
 using BookKeeping.API.Data;
 using BookKeeping.API.Extensions;
+using BookKeeping.API.Middleware.Exception;
 using BookKeeping.API.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(typeof(CustomExceptionFilter));
+});
 builder.Services.AddDbContext<BookContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BookKeepingConnectionString"))
 );
